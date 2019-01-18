@@ -102,5 +102,5 @@ def classification_report(scores):
                                                   np.std(scores['average_precision'])))
     print('ROC AUC = %0.3f +/- %0.3f' %(np.mean(scores['roc_auc']),
                                         np.std(scores['roc_auc'])))
-    print('Significance = %0.1f +/- %0.1f' %(np.mean(scores['sigmas']),
-                                             np.std(scores['sigmas'])))
+    print('Significance = %0.1f +/- %0.1f' %(np.nanmean(scores['sigmas']),
+                                             np.nanstd(scores['sigmas'])))
