@@ -32,8 +32,6 @@ skf = StratifiedKFold(n_splits=5,
 scores = dict()
 
 ## $\Delta\phi_{jj}$
-print('Delta phi_jj')
-
 X_phijj = (X['delta_phi.jj']
            .values
            .reshape(-1, 1))
@@ -42,37 +40,51 @@ phi_jj = LogisticRegression(solver='liblinear')
 
 scores['Delta phi_jj'] = classical(phi_jj, X_phijj, y, skf)
 
+print('\n' + 'Delta phi_jj' + '\n----------')
 classification_report(scores['Delta phi_jj'])
+print('\n')
 
 ## Random Forest
-print('Random Forest')
+rfc_names = ['Random Forest 1000/5',
+             'Random Forest 1000/10',
+             'Random Forest 500/None',
+             'Random Forest 1000/None',
+             'Weighted Random Forest 1000/10, 1:2',
+             'Weighted Random Forest 1000/10, 1:3',
+             'Weighted Random Forest 1000/None, 1:3',
+             'Weighted Random Forest 1000/None, balanced subsample',
+             'Balanced Random Forest 2000/10',
+             'Balanced Random Forest 1000/None',
+             'Balanced Random Forest 2000/None']
 
-rfc_1 = RandomForestClassifier(n_estimators=500,
-                               max_depth=10)
+rfc_params = [{'n_estimators':1000, 'max_depth':5},
+              {'n_estimators':1000, 'max_depth':10},
+              {'n_estimators':500},
+              {'n_estimators':1000},
+              {'n_estimators':1000, 'max_depth':10, 'class_weight':{0:1, 1:2}},
+              {'n_estimators':1000, 'max_depth':10, 'class_weight':{0:1, 1:3}},
+              {'n_estimators':1000, 'class_weight':{0:1, 1:3}},
+              {'n_estimators':1000, 'class_weight':'balanced_subsample'},
+              {'n_estimators':2000, 'max_depth':10},
+              {'n_estimators':1000},
+              {'n_estimators':2000}]
 
-scores['Random Forest'] = classical(rfc_1, X.values, y, skf)
 
-classification_report(scores['Random Forest'])
+for i in range(len(rfc_names)):
+    name = rfc_names[i]
+    params = rfc_params[i]
+    params['n_jobs'] = -1
 
-## Weighted Random Forest
-print('Weighted Random Forest')
+    if name[:8] == 'Balanced':
+        rfc = BalancedRandomForestClassifier(**params)
+    else:
+        rfc = RandomForestClassifier(**params)
 
-rfc_2 = RandomForestClassifier(n_estimators=500,
-                               max_depth=10,
-                               class_weight={0:1, 1:3})
+    scores[name] = classical(rfc, X.values, y, skf)
 
-scores['Weighted Random Forest'] = classical(rfc_2, X.values, y, skf)
+    print('\n' + name + '\n----------')
+    classification_report(scores[name])
+    print('\n')
 
-classification_report(scores['Weighted Random Forest'])
-
-## Balanced Random Forest
-print('Balanced Random Forest')
-
-rfc_3 = BalancedRandomForestClassifier(n_estimators=1000,
-                                       replacement=True)
-
-scores['Balanced Random Forest'] = classical(rfc_3, X.values, y, skf)
-
-classification_report(scores['Balanced Random Forest'])
-
-pkl_save_obj(scores, 'classical_scores')
+# Save Results
+pkl_save_obj(scores, 'classical_scores_gs4')
