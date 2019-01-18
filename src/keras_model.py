@@ -2,13 +2,13 @@ from keras.layers import Activation, Dense, Dropout
 from keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 
-def build_model(n_hidden_layers=2, loss_function='binary_crossentropy'):
+def build_model(n_hidden_layers=2, n_neurons=150, loss_function='binary_crossentropy'):
     """
     deep, fully-connected neural network in Keras w/ Tensorflow backend
 
     takes 24 inputs and outputs a binary classification probability
 
-    input and hidden layers have 150 nodes
+    input and hidden layers have 150 nodes (by default)
     are initialized w/ He
     have relu activation functions
     and are regularized using dropout w/ a 50% rate and batch normalization
@@ -18,7 +18,7 @@ def build_model(n_hidden_layers=2, loss_function='binary_crossentropy'):
     """
     model = Sequential()
 
-    model.add(Dense(150,
+    model.add(Dense(n_neurons,
                     input_dim=24,
                     kernel_initializer='he_normal'))
     model.add(BatchNormalization())
@@ -26,7 +26,7 @@ def build_model(n_hidden_layers=2, loss_function='binary_crossentropy'):
     model.add(Dropout(0.5))
 
     for _ in range(n_hidden_layers):
-        model.add(Dense(150,
+        model.add(Dense(n_neurons,
                         kernel_initializer='he_normal'))
         model.add(BatchNormalization())
         model.add(Activation('relu'))
