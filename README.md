@@ -26,7 +26,7 @@ Optionally:
 - pylhe `pip install pylhe` This is only used in preprocessing to extract the simulated data in lhe files and write them to csv. Since the csv files are included in the data folder there is no need to install this package to use the rest of the repo. Note that pylhe uses Python 2 not Python 3.
 
 ## Analysis
-See the [notebook](https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polarization/blob/master/comparison.ipynb) for full details.
+See the [notebook](https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polarization/blob/master/notebook/comparison.ipynb) for full details.
 
 ### Comparison
 First is a comparison between this work and arXiv:1812.07591, which establishes some baseline models. I am aiming to show that I can approximately reproduce the results of 1812.07591 given a different simulated dataset. Below are the predicted _LL_ fractions from this work.
