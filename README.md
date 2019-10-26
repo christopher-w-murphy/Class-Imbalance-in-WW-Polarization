@@ -15,15 +15,12 @@ git clone https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polariza
 ```
 
 ## Requisites
-
-- Anaconda Python 3
-- Imbalanced Learn `conda install -c conda-forge imbalanced-learn`
-- Keras version 2.2 or higher `conda install -c conda-forge keras`
+See the `env` folder for full details. The machine learning and data environment packages used are:
+- Imbalanced Learn
+- Keras version 2.2 or higher
 Imbalanced Learn is not fully compatible with Keras v2.0. I am not sure about v2.1.
 - pandas, NumPy, scikit-learn, TensorFlow, Matplotlib, SciPy, and Jupyter Notebook
 
-Optionally:
-- pylhe `pip install pylhe` This is only used in preprocessing to extract the simulated data in lhe files and write them to csv. Since the csv files are included in the data folder there is no need to install this package to use the rest of the repo. Note that pylhe uses Python 2 not Python 3.
 
 ## Analysis
 See the [notebook](https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polarization/blob/master/notebook/comparison.ipynb) for full details.
