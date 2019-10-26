@@ -39,7 +39,7 @@ Lastly, different models, aimed specifically at class inbalance, are trained to 
 
 Note: LaTeX equations are not properly visualized in Jupyter Notebook on Github. One option is to paste the link to the notebook into http://nbviewer.jupyter.org.
 
-## Citations
+## Citation
 If you use this code please cite:
 ```
 @article{Murphy:2019utt,
