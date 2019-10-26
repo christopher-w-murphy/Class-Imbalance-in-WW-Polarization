@@ -1,106 +1,53 @@
 import numpy as np
+from sklearn.metrics import roc_auc_score, average_precision_score, log_loss
 from time import time
 
-from sklearn.metrics import average_precision_score, roc_auc_score
-from sklearn.preprocessing import StandardScaler
 
-from src.compute_LL import logLikelihood
+def results_dict():
+    return {
+        'fit_time': np.array([]),
+        'score_time': np.array([]),
+        'test_roc_auc': np.array([]),
+        'test_average_precision': np.array([])
+    }
 
-def classical(classifer, X, y, folder):
-    times = []
-    aps = []
-    aucs = []
-    sigmas = []
 
-    log_like = logLikelihood()
+def model_analysis(model, results, X, y, tr_idx, te_idx, early_stopping=False, **kwargs):
+    """
+    This early stopping argument is for tree based models in scikit-learn.
+    For early stopping in Keras use its callback argument.
+    """
+    try:
+        if clf:
+            del clf
+    except NameError:
+        pass
+    clf = model
 
-    for train_index, test_index in folder.split(X, y):
-        t0 = time()
+    X_tr = X[tr_idx]
+    X_te = X[te_idx]
+    y_tr = y[tr_idx]
+    y_te = y[te_idx]
 
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+    t0 = time()
+    if early_stopping:
+        best_loss = 1.0 * 10**6
+        for _ in range(100):
+            clf.fit(X_tr, y_tr)
+            current_loss = log_loss(y_tr, clf.predict_proba(X_tr).T[1])
+            if current_loss < best_loss:
+                best_loss = current_loss
+                clf.n_estimators += 10
+            else:
+                break
+    else:
+        clf.fit(X_tr, y_tr, **kwargs)
+    results['fit_time'] = np.append(results['fit_time'], time() - t0)
 
-        clf = classifer
-        (clf
-         .fit(X_train, y_train))
-
-        probas = (clf
-                  .predict_proba(X_test))
-        aps.append(average_precision_score(y_test, probas.T[1]))
-        aucs.append(roc_auc_score(y_test, probas.T[1]))
-
-        mLL = (log_like.compute_log_likelihood(clf, X_test, y_test) /
-               log_like.rescale)
-        sigmas.append(log_like.compute_sigma(mLL))
-
-        times.append(time() - t0)
-
-    return {'times':times,
-            'average_precision':aps,
-            'roc_auc':aucs,
-            'sigmas':sigmas}
-
-def deep(classifer, X, y, folder, early_stopping, generator=None):
-    times = []
-    aps = []
-    aucs = []
-    sigmas = []
-
-    scaler_dnn = StandardScaler()
-    log_like = logLikelihood()
-
-    clf = classifer
-    untrained_weights = clf.get_weights()
-
-    for train_index, test_index in folder.split(X, y):
-        t0 = time()
-
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
-        X_train = (scaler_dnn
-                   .fit_transform(X_train))
-        X_test = (scaler_dnn
-                  .transform(X_test))
-
-        clf.set_weights(untrained_weights)
-
-        if generator:
-            train_gen, steps = generator(X_train,
-                                         y_train,
-                                         batch_size=256)
-            clf.fit_generator(generator=train_gen,
-                              steps_per_epoch=steps,
-                              epochs=300,
-                              callbacks=[early_stopping])
-        else:
-            clf.fit(X_train,
-                    y_train,
-                    epochs=300,
-                    batch_size=1024,
-                    callbacks=[early_stopping])
-
-        probas = (clf
-                  .predict_proba(X_test))
-        aps.append(average_precision_score(y_test, probas))
-        aucs.append(roc_auc_score(y_test, probas))
-
-        mLL = (log_like.compute_log_likelihood(clf, X_test, y_test) /
-               log_like.rescale)
-        sigmas.append(log_like.compute_sigma(mLL))
-
-        times.append(time() - t0)
-
-    return {'times':times,
-            'average_precision':aps,
-            'roc_auc':aucs,
-            'sigmas':sigmas}
-
-def classification_report(scores):
-    print('Time / Fold = %0.1f +/- %0.1f s' %(np.mean(scores['times']),
-                                              np.std(scores['times'])))
-    print('Average Precision = %0.3f +/- %0.3f' %(np.mean(scores['average_precision']),
-                                                  np.std(scores['average_precision'])))
-    print('ROC AUC = %0.3f +/- %0.3f' %(np.mean(scores['roc_auc']),
-                                        np.std(scores['roc_auc'])))
-    print('Significance = %0.1f +/- %0.1f' %(np.nanmean(scores['sigmas']),
-                                             np.nanstd(scores['sigmas'])))
+    t1 = time()
+    probas = clf.predict_proba(X_te)
+    if probas.shape[1] == 2:
+        probas = probas.T[1]
+    results['test_roc_auc'] = np.append(results['test_roc_auc'], roc_auc_score(y_te, probas))
+    results['test_average_precision'] = np.append(results['test_average_precision'], average_precision_score(y_te, probas))
+    results['score_time'] = np.append(results['score_time'], time() - t1)
