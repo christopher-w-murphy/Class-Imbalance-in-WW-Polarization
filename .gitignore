@@ -1,9 +1,6 @@
 *.csv
 *.pyc
-*.py~
 
 .DS_Store
-*/.DS_Store
 
-.gitignore~
 .ipynb_checkpoints/
