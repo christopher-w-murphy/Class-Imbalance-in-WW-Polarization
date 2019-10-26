@@ -15,12 +15,7 @@ git clone https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polariza
 ```
 
 ## Requisites
-See the `env` folder for full details. The machine learning and data environment packages used are:
-- Imbalanced Learn
-- Keras version 2.2 or higher
-Imbalanced Learn is not fully compatible with Keras v2.0. I am not sure about v2.1.
-- pandas, NumPy, scikit-learn, TensorFlow, Matplotlib, SciPy, and Jupyter Notebook
-
+See the `env` folder for full details. The only thing to watch out for is Imbalanced Learn is not fully compatible with Keras v2.0 or lower. I'm using Keras v2.3.1 
 
 ## Analysis
 See the [notebook](https://github.com/christopher-w-murphy/Class-Imbalance-in-WW-Polarization/blob/master/notebook/comparison.ipynb) for full details.
@@ -43,3 +38,17 @@ Lastly, different models, aimed specifically at class inbalance, are trained to 
 - Balanced Batch Generator
 
 Note: LaTeX equations are not properly visualized in Jupyter Notebook on Github. One option is to paste the link to the notebook into http://nbviewer.jupyter.org.
+
+## Citations
+If you use this code please cite:
+```
+@article{Murphy:2019utt,
+      author         = "Murphy, Christopher W.",
+      title          = "{Class Imbalance Techniques for High Energy Physics}",
+      year           = "2019",
+      eprint         = "1905.00339",
+      archivePrefix  = "arXiv",
+      primaryClass   = "hep-ph",
+      SLACcitation   = "%%CITATION = ARXIV:1905.00339;%%"
+}
+```
