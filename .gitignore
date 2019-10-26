@@ -1,2 +1,7 @@
 *.csv
 *.pyc
+*.py~
+
+.DS_Store
+.gitignore~
+.ipynb_checkpoints/
