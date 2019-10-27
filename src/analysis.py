@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.metrics import average_precision_score, log_loss, roc_auc_score
-from sklearn.metrics import precision_recall_curve, roc_curve
 from time import time
 
 
@@ -9,9 +8,7 @@ def results_dict():
         'fit_time': np.array([]),
         'score_time': np.array([]),
         'test_roc_auc': np.array([]),
-        'test_average_precision': np.array([]),
-        'test_roc_curve': np.array([]),
-        'test_precision_recall_curve': np.array([])
+        'test_average_precision': np.array([])
     }
 
 
@@ -53,6 +50,4 @@ def model_analysis(model, results, X, y, tr_idx, te_idx, early_stopping=False, *
         probas = probas.T[1]
     results['test_roc_auc'] = np.append(results['test_roc_auc'], roc_auc_score(y_te, probas))
     results['test_average_precision'] = np.append(results['test_average_precision'], average_precision_score(y_te, probas))
-    results['test_roc_curve'] = np.append(results['test_roc_curve'], roc_curve(y_te, probas))
-    results['test_precision_recall_curve'] = np.append(results['test_precision_recall_curve'], precision_recall_curve(y_te, probas))
     results['score_time'] = np.append(results['score_time'], time() - t1)
