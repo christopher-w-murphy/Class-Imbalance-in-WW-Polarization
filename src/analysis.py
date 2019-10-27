@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import roc_auc_score, average_precision_score, log_loss
+from sklearn.metrics import average_precision_score, log_loss, roc_auc_score
 from time import time
 
 

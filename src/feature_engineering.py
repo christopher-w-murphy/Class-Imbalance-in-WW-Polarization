@@ -116,12 +116,12 @@ class featureEngineering():
 
 
 if __name__ == '__main__':
-    raw_data_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/code_v2/raw_data'
+    raw_data_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/Class-Imbalance-in-WW-Polarization/raw_data'
     raw_targets, raw_features = getRawData().get_raw_targets_and_features(raw_data_dir)
 
     targets = featureEngineering().engineer_targets(raw_targets)
     features = featureEngineering().engineer_features(targets, raw_features)
     df = featureEngineering().pt_sorting(features)
 
-    engineered_data_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/code_v2/processed_data'
+    engineered_data_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/Class-Imbalance-in-WW-Polarization/processed_data'
     df.to_csv(os.path.join(engineered_data_dir, 'samples.csv'), index=False)

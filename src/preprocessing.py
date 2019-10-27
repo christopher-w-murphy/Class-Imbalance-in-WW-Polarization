@@ -47,5 +47,5 @@ def orchestrator(input_dir, output_dir):
 
 if __name__ == '__main__':
     input_dir = '/Users/christopherwmurphy/Documents/MG5_aMC_v2_6_6/runs/same_sign_ww/Events'
-    output_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/code_v2/raw_data'
+    output_dir = '/Users/christopherwmurphy/Documents/Research/NNtest/Class-Imbalance-in-WW-Polarization/raw_data'
     orchestrator(input_dir, output_dir)
