@@ -1,6 +1,5 @@
-from keras.layers import Activation, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
-from keras.models import Sequential
+from tensorflow.keras.layers import Activation, BatchNormalization, Dense, Dropout
+from tensorflow.keras.models import Sequential
 
 def build_model(n_features, n_hidden_layers=2, n_neurons=150, loss_function='binary_crossentropy'):
     """
